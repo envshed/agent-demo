@@ -39,7 +39,7 @@ envshed import demo.env -e development
 
 Replace `<org>` with the slug that `envshed orgs` prints. The import sends `DATABASE_URL` and `PAYMENTS_API_KEY` to Envshed and prints key names only. It warns that `demo.env` is tracked by git and tells you to rotate those secrets: in a real project you would, here the values are fake.
 
-`EMAIL_API_KEY` is left out on purpose. The agent will ask you for it.
+`EMAIL_API_KEY` is left out on purpose. The agent will ask you for it. The import also suggests deleting `demo.env`: keep it until step 5.
 
 ## 3. Give the agent the task
 
@@ -53,7 +53,7 @@ Run this app with Envshed. Organization: <org>. Project: agent-demo. Environment
 Never read .env files, never print secret values and never ask me to paste a value in the chat.
 ```
 
-The agent finds that `EMAIL_API_KEY` is missing and gives you a link. Open it, type any fake value, such as `demo-email-key`, and save. Then tell the agent you filled it. It runs the app, and the output looks like this:
+The agent finds that `EMAIL_API_KEY` is missing and gives you a link. Open it, type any fake value, such as `demo-email-key`, and save. Then tell the agent you filled it, so it does not wait for its next check. It runs the app, and the output looks like this:
 
 ```text
 Starting agent-demo with config:
@@ -81,6 +81,8 @@ cp demo.env .env
 npm run start:dotenv > without-envshed.log 2>&1
 envshed run --redact -- npm start > with-envshed.log 2>&1
 ```
+
+`npm run start:dotenv` exits with code 1, because `demo.env` has no `EMAIL_API_KEY`. That is expected: it has already printed the other values.
 
 Then look for your values in each file:
 
